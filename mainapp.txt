@@ -1,0 +1,88 @@
+
+import { useState} from "react";
+
+function MainApp(){
+    const[userdata,setUserData] =useState([])
+    const[user,setUser] = useState('');
+
+    const[department,setDeptData] = useState([])
+    const[dept,setDept] = useState('');
+
+    const addUser= (e)=>{
+        e.preventDefault()
+        setUserData([
+            ...userdata,{user}
+        ])
+        setUser('')
+    }
+
+    
+
+    const removeUser =(user)=>{
+        setUserData(userdata.filter((usr)=>usr.user!== user))
+    }
+    
+    
+    return(
+        <div>
+            {userdata.map((usr)=>(
+                <div>
+                    <h6>{usr.user}</h6>
+                    <button onClick={() => removeUser(usr.user)}>DELETE</button>
+                </div>
+            ))}
+            
+            <form onSubmit={addUser}>
+                User : <input type="text" value={user} onChange={(e)=>setUser(e.target.value)}/>
+               <button>ADD</button>
+            </form>
+            
+        </div>
+    )
+}
+export default MainApp;
+
+
+
+
+
+
+---------------------------------
+
+import { Component } from "react";
+import axios from "axios";
+
+const API_URL = "https://jsonplaceholder.typicode.com/users";
+
+export default class RestApp extends Component {
+
+    state={
+        users:[]
+    }
+  componentDidMount() {
+    axios.get(API_URL).then(res => res.data) 
+    .then((data)=>{ 
+        this.setState({users:data})   
+        console.log(this.state.users);
+        
+    }) 
+  }
+  render() {
+    return (
+    <div className='container'>
+
+<div className='col-xs-8'>
+    <h1> Users Data</h1>
+    {this.state.users.map((user) =>(
+        <div className="card">
+           <div className="card-body"> 
+    <h5 className="card-title">{user.name}</h5>
+    <h6 className="card-title">{user.email}</h6>
+           </div> 
+        </div>
+    ))}
+</div>
+    </div>
+    )
+  }
+}
